@@ -25,10 +25,10 @@ export gitea="git.kejizero.online"
 export github="github.com"
 
 REPO_URL="https://github.com/${GITHUB_REPOSITORY}"
-if [ "$REPO_URL" = "https://github.com/NeonPulse-Zero/ZeroWrt" ]; then
+if [ "$REPO_URL" = "https://github.com/grandway2025/OpenWrt-24.10-Action" ]; then
     export mirror="http://127.0.0.1:8080"
 else
-    export mirror="https://init.kejizero.online"
+    export mirror="https://raw.githubusercontent.com/grandway2025/OpenWrt-24.10-Action/main"
 fi
 
 # 检测 Root
@@ -279,7 +279,7 @@ echo -e "CONFIG_GCC_USE_VERSION_${gcc_version}=y\n" >> .config
 if [ "$BUILD_FAST" = "y" ]; then
     echo -e "\n${GREEN_COLOR}Download Toolchain ...${RES}"
     [ -f /etc/os-release ] && source /etc/os-release
-    TOOLCHAIN_URL=https://github.com/NeonPulse-Zero/openwrt_caches/releases/download/openwrt-24.10
+    TOOLCHAIN_URL=https://"$github_proxy"github.com/dd-ray/openwrt_caches/releases/download/openwrt-24.10
     curl -L ${TOOLCHAIN_URL}/toolchain_musl_${toolchain_arch}_gcc-${gcc_version}.tar.zst -o toolchain.tar.zst $CURL_BAR
     echo -e "\n${GREEN_COLOR}Process Toolchain ...${RES}"
     tar -I "zstd" -xf toolchain.tar.zst
@@ -337,212 +337,5 @@ if [ "$platform" = "x86_64" ]; then
         bash kmod-sign $kmodpkg_name
         tar zcf x86_64-$kmodpkg_name.tar.gz $kmodpkg_name
         rm -rf $kmodpkg_name
-    fi
-    # OTA json
-    if [ "$1" = "v24" ]; then
-        mkdir -p ota
-        OTA_URL="https://github.com/NeonPulse-Zero/ZeroWrt/releases/download"
-        VERSION=$(sed 's/v//g' version.txt)
-        SHA256=$(sha256sum bin/targets/x86/64*/*-generic-squashfs-combined-efi.img.gz | awk '{print $1}')
-        cat > ota/x86_64.json <<EOF
-{
-  "x86_64": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256",
-      "url": "$OTA_URL/OpenWrt-v$VERSION/zerowrt-$VERSION-x86-64-generic-squashfs-combined-efi.img.gz"
-    }
-  ]
-}
-EOF
-    fi
-elif [ "$platform" = "rockchip" ]; then
-    if [ "$NO_KMOD" != "y" ]; then
-        cp -a bin/targets/rockchip/armv8*/packages $kmodpkg_name
-        rm -f $kmodpkg_name/Packages*
-        cp -a bin/packages/aarch64_generic/base/rtl88*-firmware*.ipk $kmodpkg_name/
-        cp -a bin/packages/aarch64_generic/base/natflow*.ipk $kmodpkg_name/
-        bash kmod-sign $kmodpkg_name
-        tar zcf armv8-$kmodpkg_name.tar.gz $kmodpkg_name
-        rm -rf $kmodpkg_name
-    fi
-    # OTA json
-    if [ "$1" = "v24" ]; then
-        mkdir -p ota
-        OTA_URL="https://github.com/NeonPulse-Zero/ZeroWrt/releases/download"
-        VERSION=$(sed 's/v//g' version.txt)
-        SHA256_armsom_sige3=$(sha256sum bin/targets/rockchip/armv8*/zerowrt-$VERSION-rockchip-armv8-armsom_sige3-squashfs-sysupgrade.img.gz | awk '{print $1}')
-        SHA256_armsom_sige7=$(sha256sum bin/targets/rockchip/armv8*/zerowrt-$VERSION-rockchip-armv8-armsom_sige7-squashfs-sysupgrade.img.gz | awk '{print $1}')
-        SHA256_t4=$(sha256sum bin/targets/rockchip/armv8*/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopc-t4-squashfs-sysupgrade.img.gz | awk '{print $1}')
-        SHA256_t6=$(sha256sum bin/targets/rockchip/armv8*/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopc-t6-squashfs-sysupgrade.img.gz | awk '{print $1}')
-        SHA256_r2c_plus=$(sha256sum bin/targets/rockchip/armv8*/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r2c-plus-squashfs-sysupgrade.img.gz | awk '{print $1}')
-        SHA256_r2c=$(sha256sum bin/targets/rockchip/armv8*/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r2c-squashfs-sysupgrade.img.gz | awk '{print $1}')
-        SHA256_r2s=$(sha256sum bin/targets/rockchip/armv8*/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r2s-squashfs-sysupgrade.img.gz | awk '{print $1}')
-        SHA256_r3s=$(sha256sum bin/targets/rockchip/armv8*/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r3s-squashfs-sysupgrade.img.gz | awk '{print $1}')
-        SHA256_r4s=$(sha256sum bin/targets/rockchip/armv8*/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r4s-squashfs-sysupgrade.img.gz | awk '{print $1}')
-        SHA256_r4se=$(sha256sum bin/targets/rockchip/armv8*/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r4se-squashfs-sysupgrade.img.gz | awk '{print $1}')
-        SHA256_r5c=$(sha256sum bin/targets/rockchip/armv8*/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r5c-squashfs-sysupgrade.img.gz | awk '{print $1}')
-        SHA256_r5s=$(sha256sum bin/targets/rockchip/armv8*/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r5s-squashfs-sysupgrade.img.gz | awk '{print $1}')
-        SHA256_r6c=$(sha256sum bin/targets/rockchip/armv8*/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r6c-squashfs-sysupgrade.img.gz | awk '{print $1}')
-        SHA256_r6s=$(sha256sum bin/targets/rockchip/armv8*/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r6s-squashfs-sysupgrade.img.gz | awk '{print $1}')
-        SHA256_huake_guangmiao_g4c=$(sha256sum bin/targets/rockchip/armv8*/zerowrt-$VERSION-rockchip-armv8-huake_guangmiao-g4c-squashfs-sysupgrade.img.gz | awk '{print $1}')
-        SHA256_r66s=$(sha256sum bin/targets/rockchip/armv8*/zerowrt-$VERSION-rockchip-armv8-lunzn_fastrhino-r66s-squashfs-sysupgrade.img.gz | awk '{print $1}')
-        SHA256_r68s=$(sha256sum bin/targets/rockchip/armv8*/zerowrt-$VERSION-rockchip-armv8-lunzn_fastrhino-r68s-squashfs-sysupgrade.img.gz | awk '{print $1}')
-        SHA256_radxa_rock_5a=$(sha256sum bin/targets/rockchip/armv8*/zerowrt-$VERSION-rockchip-armv8-radxa_rock-5a-squashfs-sysupgrade.img.gz | awk '{print $1}')
-        SHA256_radxa_rock_5b=$(sha256sum bin/targets/rockchip/armv8*/zerowrt-$VERSION-rockchip-armv8-radxa_rock-5b-squashfs-sysupgrade.img.gz | awk '{print $1}')
-        SHA256_xunlong_orangepi_5_plus=$(sha256sum bin/targets/rockchip/armv8*/zerowrt-$VERSION-rockchip-armv8-xunlong_orangepi-5-plus-squashfs-sysupgrade.img.gz | awk '{print $1}')
-        SHA256_xunlong_orangepi_5=$(sha256sum bin/targets/rockchip/armv8*/zerowrt-$VERSION-rockchip-armv8-xunlong_orangepi-5-squashfs-sysupgrade.img.gz | awk '{print $1}')
-        cat > ota/rockchip.json <<EOF
-{
-  "armsom,sige3": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_armsom_sige3",
-      "url": "$OTA_URL/OpenWrt-v$VERSION/zerowrt-$VERSION-rockchip-armv8-armsom_sige3-squashfs-sysupgrade.img.gz"
-    }
-  ],
-  "armsom,sige7": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_armsom_sige7",
-      "url": "$OTA_URL/OpenWrt-v$VERSION/zerowrt-$VERSION-rockchip-armv8-armsom_sige7-squashfs-sysupgrade.img.gz"
-    }
-  ],
-  "friendlyarm,nanopc-t4": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_t4",
-      "url": "$OTA_URL/OpenWrt-v$VERSION/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopc-t4-squashfs-sysupgrade.img.gz"
-    }
-  ],
-  "friendlyarm,nanopc-t6": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_t6",
-      "url": "$OTA_URL/OpenWrt-v$VERSION/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopc-t6-squashfs-sysupgrade.img.gz"
-    }
-  ],
-  "friendlyarm,nanopi-r2c-plus": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_r2c_plus",
-      "url": "$OTA_URL/OpenWrt-v$VERSION/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r2c-plus-squashfs-sysupgrade.img.gz"
-    }
-  ],
-  "friendlyarm,nanopi-r2c": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_r2c",
-      "url": "$OTA_URL/OpenWrt-v$VERSION/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r2c-squashfs-sysupgrade.img.gz"
-    }
-  ],
-  "friendlyarm,nanopi-r2s": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_r2s",
-      "url": "$OTA_URL/OpenWrt-v$VERSION/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r2s-squashfs-sysupgrade.img.gz"
-    }
-  ],
-  "friendlyarm,nanopi-r3s": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_r3s",
-      "url": "$OTA_URL/OpenWrt-v$VERSION/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r3s-squashfs-sysupgrade.img.gz"
-    }
-  ],
-  "friendlyarm,nanopi-r4s": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_r4s",
-      "url": "$OTA_URL/OpenWrt-v$VERSION/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r4s-squashfs-sysupgrade.img.gz"
-    }
-  ],
-  "friendlyarm,nanopi-r4se": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_r4se",
-      "url": "$OTA_URL/OpenWrt-v$VERSION/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r4se-squashfs-sysupgrade.img.gz"
-    }
-  ],
-  "friendlyarm,nanopi-r5c": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_r5c",
-      "url": "$OTA_URL/OpenWrt-v$VERSION/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r5c-squashfs-sysupgrade.img.gz"
-    }
-  ],
-  "friendlyarm,nanopi-r5s": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_r5s",
-      "url": "$OTA_URL/OpenWrt-v$VERSION/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r5s-squashfs-sysupgrade.img.gz"
-    }
-  ],
-  "friendlyarm,nanopi-r6c": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_r6c",
-      "url": "$OTA_URL/OpenWrt-v$VERSION/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r6c-squashfs-sysupgrade.img.gz"
-    }
-  ],
-  "friendlyarm,nanopi-r6s": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_r6s",
-      "url": "$OTA_URL/OpenWrt-v$VERSION/zerowrt-$VERSION-rockchip-armv8-friendlyarm_nanopi-r6s-squashfs-sysupgrade.img.gz"
-    }
-  ],
-  "huake,guangmiao-g4c": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_huake_guangmiao_g4c",
-      "url": "$OTA_URL/OpenWrt-v$VERSION/zerowrt-$VERSION-rockchip-armv8-huake_guangmiao-g4c-squashfs-sysupgrade.img.gz"
-    }
-  ],
-  "lunzn,fastrhino-r66s": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_r66s",
-      "url": "$OTA_URL/OpenWrt-v$VERSION/zerowrt-$VERSION-rockchip-armv8-lunzn_fastrhino-r66s-squashfs-sysupgrade.img.gz"
-    }
-  ],
-  "lunzn,fastrhino-r68s": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_r68s",
-      "url": "$OTA_URL/OpenWrt-v$VERSION/zerowrt-$VERSION-rockchip-armv8-lunzn_fastrhino-r68s-squashfs-sysupgrade.img.gz"
-    }
-  ],
-  "radxa,rock-5a": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_radxa_rock_5a",
-      "url": "$OTA_URL/OpenWrt-v$VERSION/zerowrt-$VERSION-rockchip-armv8-radxa_rock-5a-squashfs-sysupgrade.img.gz"
-    }
-  ],
-  "radxa,rock-5b": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_radxa_rock_5b",
-      "url": "$OTA_URL/OpenWrt-v$VERSION/zerowrt-$VERSION-rockchip-armv8-radxa_rock-5b-squashfs-sysupgrade.img.gz"
-    }
-  ],
-  "xunlong,orangepi-5-plus": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_xunlong_orangepi_5_plus",
-      "url": "$OTA_URL/OpenWrt-v$VERSION/zerowrt-$VERSION-rockchip-armv8-xunlong_orangepi-5-plus-squashfs-sysupgrade.img.gz"
-    }
-  ],
-  "xunlong,orangepi-5": [
-    {
-      "build_date": "$CURRENT_DATE",
-      "sha256sum": "$SHA256_xunlong_orangepi_5",
-      "url": "$OTA_URL/OpenWrt-v$VERSION/zerowrt-$VERSION-rockchip-armv8-xunlong_orangepi-5-squashfs-sysupgrade.img.gz"
-    }
-  ]
-}
-EOF
-    fi
-fi        
+    fi      
 ### People come and go, we struggled with laughter and tears,and all the years have gone by,still Ihave you by my side. 你陪了我多少年，花开花落。一路上起起跌跌 ###
