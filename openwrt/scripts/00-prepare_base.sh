@@ -27,21 +27,15 @@ curl -s $mirror/openwrt/patch/generic-24.10/0003-rootfs-add-r-w-permissions-for-
 curl -s $mirror/openwrt/patch/generic-24.10/0004-rootfs-Add-support-for-local-kmod-installation-sourc.patch | patch -p1
 
 ### 获取额外的基础软件包 ###
-# rockchip - target
-rm -rf package/boot/{rkbin,uboot-rockchip,arm-trusted-firmware-rockchip}
-rm -rf target/linux/rockchip
-#cp -rf ../immortalwrt/target/linux/rockchip target/linux/rockchip
-#cp -rf ../immortalwrt/package/boot/uboot-rockchip package/boot/uboot-rockchip
-#cp -rf ../immortalwrt/package/boot/arm-trusted-firmware-rockchip package/boot/arm-trusted-firmware-rockchip
-#sed -i '/REQUIRE_IMAGE_METADATA/d' target/linux/rockchip/armv8/base-files/lib/upgrade/platform.sh
-
-# rockchip - target
-git clone https://$github/NeonPulse-Zero/rkbin package/boot/rkbin
-git clone https://$github/NeonPulse-Zero/uboot-rk35xx package/boot/uboot-rk35xx
-git clone https://$github/NeonPulse-Zero/uboot-rockchip package/boot/uboot-rockchip
-git clone https://$github/NeonPulse-Zero/arm-trusted-firmware-rockchip package/boot/arm-trusted-firmware-rockchip
-git clone https://$github/NeonPulse-Zero/target_linux_rockchip target/linux/rockchip
-sed -i '/REQUIRE_IMAGE_METADATA/d' target/linux/rockchip/armv8/base-files/lib/upgrade/platform.sh
+# Rockchip - rkbin & u-boot
+rm -rf package/boot/rkbin package/boot/uboot-rockchip package/boot/arm-trusted-firmware-rockchip
+if [ "$platform" = "rk3399" ]; then
+    git clone https://$github/sbwml/package_boot_uboot-rockchip package/boot/uboot-rockchip -b v2023.04
+    git clone https://$github/sbwml/arm-trusted-firmware-rockchip package/boot/arm-trusted-firmware-rockchip -b 0419
+else
+    git clone https://$github/sbwml/package_boot_uboot-rockchip package/boot/uboot-rockchip
+    git clone https://$github/sbwml/arm-trusted-firmware-rockchip package/boot/arm-trusted-firmware-rockchip
+fi
 
 ### FW4 ###
 curl -s $mirror/openwrt/doc/firewall4/Makefile > package/network/config/firewall4/Makefile
@@ -195,7 +189,7 @@ if [ -n "$ROOT_PASSWORD" ]; then
     sed -i "s|^root:[^:]*:|root:${default_password}:|" package/base-files/files/etc/shadow
 fi
 
-sed -i 's/OpenWrt/ZeroWrt/' package/base-files/files/bin/config_generate
+sed -i 's/OpenWrt/OpenWrt/' package/base-files/files/bin/config_generate
 
 curl -s $mirror/openwrt/doc/base-files/banner > package/base-files/files/etc/banner
 
@@ -266,17 +260,6 @@ curl -so files/etc/sysctl.d/16-udp-buffer-size.conf $mirror/openwrt/files/etc/sy
 curl -so files/etc/hotplug.d/iface/99-zzz-odhcpd $mirror/openwrt/files/etc/hotplug.d/iface/99-zzz-odhcpd
 curl -so files/etc/hotplug.d/net/01-maximize_nic_rx_tx_buffers  $mirror/openwrt/files/etc/hotplug.d/net/01-maximize_nic_rx_tx_buffers
 
-# ZeroWrt Options Menu
-mkdir -p files/bin
-curl -so files/root/version.txt $mirror/openwrt/files/root/version.txt
-curl -so files/bin/ZeroWrt $mirror/openwrt/files/bin/ZeroWrt
-chmod +x files/bin/ZeroWrt
-chmod +x files/root/version.txt
-
-# key-build.pub
-curl -so files/root/key-build.pub https://opkg.kejizero.online/key-build.pub
-chmod +x files/root/key-build.pub
-
 # NTP
 sed -i 's/0.openwrt.pool.ntp.org/ntp1.aliyun.com/g' package/base-files/files/bin/config_generate
 sed -i 's/1.openwrt.pool.ntp.org/ntp2.aliyun.com/g' package/base-files/files/bin/config_generate
@@ -286,24 +269,6 @@ sed -i 's/3.openwrt.pool.ntp.org/time2.cloud.tencent.com/g' package/base-files/f
 # luci-theme-bootstrap
 sed -i 's/font-size: 13px/font-size: 14px/g' feeds/luci/themes/luci-theme-bootstrap/htdocs/luci-static/bootstrap/cascade.css
 sed -i 's/9.75px/10.75px/g' feeds/luci/themes/luci-theme-bootstrap/htdocs/luci-static/bootstrap/cascade.css
-
-# 版本设置
-cat << 'EOF' >> feeds/luci/modules/luci-mod-status/ucode/template/admin_status/index.ut
-<script>
-function addLinks() {
-    var section = document.querySelector(".cbi-section");
-    if (section) {
-        var links = document.createElement('div');
-        links.innerHTML = '<div class="table"><div class="tr"><div class="td left" width="33%"><a href="https://qm.qq.com/q/JbBVnkjzKa" target="_blank">QQ交流群</a></div><div class="td left" width="33%"><a href="https://t.me/kejizero" target="_blank">TG交流群</a></div><div class="td left"><a href="https://openwrt.kejizero.online" target="_blank">固件地址</a></div></div></div>';
-        section.appendChild(links);
-    } else {
-        setTimeout(addLinks, 100); // 继续等待 `.cbi-section` 加载
-    }
-}
-
-document.addEventListener("DOMContentLoaded", addLinks);
-</script>
-EOF
 
 # 加入作者信息
 sed -i "s/DISTRIB_DESCRIPTION='*.*'/DISTRIB_DESCRIPTION='ZeroWrt-$(date +%Y%m%d)'/g"  package/base-files/files/etc/openwrt_release
