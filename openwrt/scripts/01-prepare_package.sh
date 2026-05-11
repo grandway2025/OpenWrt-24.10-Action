@@ -12,10 +12,10 @@ rm -rf feeds/packages/lang/node
 git clone https://$github/sbwml/feeds_packages_lang_node-prebuilt feeds/packages/lang/node -b packages-24.10
 
 # default settings
-git clone https://$github/zhiern/default-settings package/new/default-settings -b openwrt-24.10
+git clone https://$github/sbwml/default-settings package/new/default-settings -b openwrt-24.10
 
 # linkease
-git clone https://$github/zhiern/package_new_linkease package/new/linkease
+# git clone https://$github/zhiern/package_new_linkease package/new/linkease
 
 # luci-app-quickfile
 git clone https://$github/sbwml/luci-app-quickfile package/new/quickfile
@@ -34,12 +34,12 @@ sed -i 's/stderr 1/stderr 0/g' feeds/packages/net/nlbwmon/files/nlbwmon.init
 
 # UPnP
 rm -rf feeds/{packages/net/miniupnpd,luci/applications/luci-app-upnp}
-git clone https://$gitea/zhao/miniupnpd feeds/packages/net/miniupnpd -b v2.3.9
-git clone https://$gitea/zhao/luci-app-upnp feeds/luci/applications/luci-app-upnp -b openwrt-24.10
+git clone https://$github/grandway2025/miniupnpd feeds/packages/net/miniupnpd
+git clone https://$github/grandway2025/luci-app-upnp feeds/luci/applications/luci-app-upnp
 
 # Docker
 rm -rf feeds/luci/applications/luci-app-dockerman
-git clone https://$gitea/zhao/luci-app-dockerman -b openwrt-24.10 feeds/luci/applications/luci-app-dockerman
+git clone https://$github/sbwml/luci-app-dockerman -b openwrt-24.10 feeds/luci/applications/luci-app-dockerman
 rm -rf feeds/packages/utils/{docker,dockerd,containerd,runc}
 git clone https://$github/sbwml/packages_utils_docker feeds/packages/utils/docker
 git clone https://$github/sbwml/packages_utils_dockerd feeds/packages/utils/dockerd
@@ -180,8 +180,8 @@ sed -i 's,frp 服务器,Frp 服务器,g' feeds/luci/applications/luci-app-frps/p
 sed -i 's,frp 客户端,Frp 客户端,g' feeds/luci/applications/luci-app-frpc/po/zh_Hans/frpc.po
 
 # luci-app-sqm
-rm -rf feeds/luci/applications/luci-app-sqm
-git clone https://$gitea/zhao/luci-app-sqm feeds/luci/applications/luci-app-sqm
+# rm -rf feeds/luci/applications/luci-app-sqm
+# git clone https://$gitea/zhao/luci-app-sqm feeds/luci/applications/luci-app-sqm
 
 # unzip
 rm -rf feeds/packages/utils/unzip
@@ -196,7 +196,7 @@ git clone https://$github/sbwml/openwrt_pkgs package/new/custom --depth=1
 rm -rf package/new/custom/luci-app-adguardhome
 
 # adguardhome
-git clone https://$gitea/zhao/luci-app-adguardhome package/new/luci-app-adguardhome 
+# git clone https://$gitea/zhao/luci-app-adguardhome package/new/luci-app-adguardhome 
 
 # argon
-git clone https://$github/zhiern/luci-theme-argon package/new/luci-theme-argon
+git clone https://$github/sbwml/luci-theme-argon -b openwrt-24.10 package/new/luci-theme-argon --depth=1
