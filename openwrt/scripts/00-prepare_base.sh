@@ -92,7 +92,7 @@ curl -s $mirror/openwrt/patch/firewall4/nftables/0002-nftables-add-brcm-fullcone
 curl -s $mirror/openwrt/patch/firewall4/nftables/0003-drop-rej-file.patch > package/network/utils/nftables/patches/0003-drop-rej-file.patch
 
 # FullCone module
-git clone https://$gitea/zhao/nft-fullcone package/new/nft-fullcone
+git clone https://$github/dd-ray/nft-fullcone package/new/nft-fullcone
 
 # IPv6 NAT
 git clone https://$github/sbwml/packages_new_nat6 package/new/nat6
@@ -101,7 +101,7 @@ git clone https://$github/sbwml/packages_new_nat6 package/new/nat6
 git clone https://$github/sbwml/package_new_natflow package/new/natflow
 
 # Shortcut Forwarding Engine
-git clone https://$gitea/zhao/shortcut-fe package/new/shortcut-fe
+git clone https://$github/dd-ray/shortcut-fe package/new/shortcut-fe
 
 # ARM64 型号名称
 curl -s $mirror/openwrt/patch/arm64/kernel-6.6/312-arm64-cpuinfo-Add-model-name-in-proc-cpuinfo-for-64bit-ta.patch > target/linux/generic/hack-6.6/312-arm64-cpuinfo-Add-model-name-in-proc-cpuinfo-for-64bit-ta.patch
