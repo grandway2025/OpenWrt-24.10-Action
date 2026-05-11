@@ -20,19 +20,6 @@ endgroup() {
     GROUP=
 }
 
-echo -e ""
-echo -e "${BLUE_COLOR}╔═════════════════════════════════════════════════════════════╗${RES}"
-echo -e "${BLUE_COLOR}║${RES}                     OPENWRT BUILD SYSTEM                    ${BLUE_COLOR}║${RES}"
-echo -e "${BLUE_COLOR}╚═════════════════════════════════════════════════════════════╝${RES}"
-echo -e "${BLUE_COLOR}┌─────────────────────────────────────────────────────────────┐${RES}"
-echo -e "${BLUE_COLOR}│${RES}  🛠️  ${YELLOW_COLOR}Developer:${RES} OPPEN321                                   ${BLUE_COLOR}│${RES}"
-echo -e "${BLUE_COLOR}│${RES}  🌐  ${YELLOW_COLOR}Blog:${RES} www.kejizero.online                             ${BLUE_COLOR}│${RES}"
-echo -e "${BLUE_COLOR}│${RES}  💡  ${YELLOW_COLOR}Philosophy:${RES} Open Source · Customization · Performance ${BLUE_COLOR}│${RES}"
-echo -e "${BLUE_COLOR}└─────────────────────────────────────────────────────────────┘${RES}"
-echo -e "${BLUE_COLOR}🔧 ${GREEN_COLOR}Building:${RES} $(date '+%Y-%m-%d %H:%M:%S')"
-echo -e "${BLUE_COLOR}══════════════════════════════════════════════════════════════${RES}"
-echo -e ""
-
 # 自定义链接地址
 export gitea="git.kejizero.online"
 export github="github.com"
