@@ -78,7 +78,7 @@ jobs:
       continue-on-error: true
       uses: actions/checkout@main
       with:
-        path: ZeroWrt
+        path: r4s_build_script
        
     - name: Setup variables
       run: |
@@ -104,10 +104,10 @@ jobs:
 
     - name: Install Caddy Server
       run: |
-        sudo curl -sL -o /usr/bin/caddy https://github.com/NeonPulse-Zero/ZeroWrt/releases/download/Caddy/caddy
+        sudo curl -sL -o /usr/bin/caddy https://github.com/sbwml/r4s_build_script/releases/download/caddy/caddy
         sudo chmod 755 /usr/bin/caddy
         echo ":8080 {" > caddyfile
-        echo "    root * $(pwd)/ZeroWrt" >> caddyfile
+        echo "    root * $(pwd)/r4s_build_script" >> caddyfile
         echo "    file_server browse" >> caddyfile
         echo "}" >> caddyfile
         sudo /usr/bin/caddy start --config caddyfile --adapter caddyfile
