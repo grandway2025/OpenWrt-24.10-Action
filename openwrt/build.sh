@@ -189,7 +189,7 @@ scripts=(
   00-prepare_base.sh
   01-prepare_package.sh
   02-prepare_adguard_core.sh
-  03-preset_mihimo_core.sh
+# 03-preset_mihimo_core.sh
   04-preset_homeproxy.sh
   06-fix-source.sh
   10-custom.sh
