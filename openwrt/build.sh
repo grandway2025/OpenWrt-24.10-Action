@@ -144,6 +144,11 @@ if [ -n "$ROOT_PASSWORD" ]; then
 else
     echo -e "${GREEN_COLOR}Default Password:${RES} (${YELLOW_COLOR}No password${RES})"
 fi
+if [ "$ENABLE_GLIBC" = "y" ]; then
+    echo -e "${GREEN_COLOR}Standard C Library:${RES} ${BLUE_COLOR}glibc${RES}"
+else
+    echo -e "${GREEN_COLOR}Standard C Library:${RES} ${BLUE_COLOR}musl${RES}"
+fi
 echo -e "${GREEN_COLOR}Standard C Library:${RES} ${BLUE_COLOR}musl${RES}"
 echo -e "${GREEN_COLOR}Web Server:${RES} ${BLUE_COLOR}$web_server${RES}"
 print_status "ENABLE_OTA"        "$ENABLE_OTA"
