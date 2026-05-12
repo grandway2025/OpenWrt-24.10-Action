@@ -91,9 +91,11 @@ case "$GCC_VERSION" in
   GCC15)
     export gcc_version=15
     ;;
+  *)
+    export gcc_version=15
+    ;;
 esac
-
-echo "👉 已选择 GCC 版本: $gcc_version"
+echo "👉 已选择 GCC 版本: $gcc_version
 
 
 # 脚本定义
@@ -263,6 +265,22 @@ if [ "$ENABLE_LOCAL_KMOD" = "y" ]; then
     echo "CONFIG_VERSION_NUMBER="24.10.2" " >> .config
 fi
 
+# disable mihomo to avoid recursive dependency
+echo -e "\n${YELLOW_COLOR}Disable mihomo packages to avoid recursive dependency...${RES}"
+sed -i '/CONFIG_PACKAGE_.*mihomo/d' .config || true
+sed -i '/CONFIG_PACKAGE_luci-app-mihomo/d' .config || true
+sed -i '/CONFIG_PACKAGE_luci-i18n-mihomo/d' .config || true
+cat >> .config <<'EOF'
+# disable mihomo
+# CONFIG_PACKAGE_mihomo is not set
+# CONFIG_PACKAGE_mihomo-alpha is not set
+# CONFIG_PACKAGE_mihomo-beta is not set
+# CONFIG_PACKAGE_mihomo-dev is not set
+# CONFIG_PACKAGE_mihomo-meta is not set
+# CONFIG_PACKAGE_luci-app-mihomo is not set
+# CONFIG_PACKAGE_luci-i18n-mihomo-zh-cn is not set
+EOF
+
 # gcc15 patches
 [ "$(whoami)" = "runner" ] && group "patching toolchain"
 curl -s $mirror/openwrt/patch/gcc/200-toolchain-gcc-add-support-for-GCC-15.patch | patch -p1
@@ -299,7 +317,7 @@ fi
 # Compile
 if [ "$BUILD_TOOLCHAIN" = "y" ]; then
     echo -e "\r\n${GREEN_COLOR}Building Toolchain ...${RES}\r\n"
-    make -j$cores toolchain/compile || make -j$cores toolchain/compile V=s || exit 1
+    make -j$cores toolchain/compile || make -j1 V=s toolchain/compile || exit 1
     mkdir -p toolchain-cache
     tar -I "zstd -19 -T$(nproc --all)" -cf toolchain-cache/toolchain_musl_${toolchain_arch}_gcc-${gcc_version}.tar.zst ./{build_dir,dl,staging_dir,tmp}
     echo -e "\n${GREEN_COLOR} Build success! ${RES}"
