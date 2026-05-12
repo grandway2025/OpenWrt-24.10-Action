@@ -134,10 +134,16 @@ print_status() {
         echo -e "${GREEN_COLOR}${name}:${RES} ${false_color}false${RES}${newline}"
     fi
 }
-[ -n "$LAN" ] && echo -e "${GREEN_COLOR}LAN:${RES} $LAN" || echo -e "${GREEN_COLOR}LAN:${RES} 10.0.0.1"
-[ -n "$ROOT_PASSWORD" ] \
-    && echo -e "${GREEN_COLOR}Default Password:${RES} ${BLUE_COLOR}$ROOT_PASSWORD${RES}" \
-    || echo -e "${GREEN_COLOR}Default Password:${RES} (${YELLOW_COLOR}No password${RES})"
+if [ -n "$LAN" ]; then
+    echo -e "${GREEN_COLOR}LAN:${RES} $LAN"
+else
+    echo -e "${GREEN_COLOR}LAN:${RES} 10.0.0.1"
+fi
+if [ -n "$ROOT_PASSWORD" ]; then
+    echo -e "${GREEN_COLOR}Default Password:${RES} ${BLUE_COLOR}$ROOT_PASSWORD${RES}"
+else
+    echo -e "${GREEN_COLOR}Default Password:${RES} (${YELLOW_COLOR}No password${RES})"
+fi
 echo -e "${GREEN_COLOR}Standard C Library:${RES} ${BLUE_COLOR}musl${RES}"
 echo -e "${GREEN_COLOR}Web Server:${RES} ${BLUE_COLOR}$web_server${RES}"
 print_status "ENABLE_OTA"        "$ENABLE_OTA"
