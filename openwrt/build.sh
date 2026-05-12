@@ -208,7 +208,7 @@ chmod 0755 *sh
 bash 00-prepare_base.sh
 bash 01-prepare_package.sh
 bash 02-prepare_adguard_core.sh
-bash 03-preset_mihimo_core.sh
+# bash 03-preset_mihimo_core.sh
 bash 04-preset_homeproxy.sh
 bash 06-fix-source.sh
 if [ "$platform" = "rockchip" ]; then
