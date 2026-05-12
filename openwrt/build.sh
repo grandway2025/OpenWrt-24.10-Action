@@ -95,7 +95,7 @@ case "$GCC_VERSION" in
     export gcc_version=15
     ;;
 esac
-echo "👉 已选择 GCC 版本: $gcc_version
+echo "👉 已选择 GCC 版本: $gcc_version"
 
 
 # 脚本定义
@@ -358,12 +358,17 @@ fi
 
 if [ "$platform" = "x86_64" ]; then
     if [ "$NO_KMOD" != "y" ]; then
-        cp -a bin/targets/x86/*/packages $kmodpkg_name/
-        rm -f $kmodpkg_name/Packages*
-        cp -a bin/packages/x86_64/base/rtl88*a-firmware*.ipk $kmodpkg_name/
-        cp -a bin/packages/x86_64/base/natflow*.ipk $kmodpkg_name/
-        bash kmod-sign $kmodpkg_name
-        tar zcf x86_64-$kmodpkg_name.tar.gz $kmodpkg_name
-        rm -rf $kmodpkg_name
-    fi      
+        mkdir -p "$kmodpkg_name"
+
+        cp -a bin/targets/x86/*/packages/* "$kmodpkg_name"/ || true
+        rm -f "$kmodpkg_name"/Packages*
+
+        cp -a bin/packages/x86_64/base/rtl88*a-firmware*.ipk "$kmodpkg_name"/ || true
+        cp -a bin/packages/x86_64/base/natflow*.ipk "$kmodpkg_name"/ || true
+
+        bash kmod-sign "$kmodpkg_name"
+        tar zcf "x86_64-$kmodpkg_name.tar.gz" "$kmodpkg_name"
+        rm -rf "$kmodpkg_name"
+    fi
+fi
 ### People come and go, we struggled with laughter and tears,and all the years have gone by,still Ihave you by my side. 你陪了我多少年，花开花落。一路上起起跌跌 ###
