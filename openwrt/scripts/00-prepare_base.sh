@@ -5,7 +5,7 @@
 sed -i 's/Os/O2/g' include/target.mk
 
 # 内核版本设置
-curl -s $mirror/tags/kernel-6.6 > include/kernel-6.6
+# curl -s $mirror/tags/kernel-6.6 > include/kernel-6.6
 curl -s $mirror/openwrt/patch/kernel-6.6/kernel/0001-linux-module-video.patch > package/0001-linux-module-video.patch
 git apply package/0001-linux-module-video.patch
 rm -rf package/0001-linux-module-video.patch
