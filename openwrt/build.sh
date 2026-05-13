@@ -134,16 +134,10 @@ print_status() {
         echo -e "${GREEN_COLOR}${name}:${RES} ${false_color}false${RES}${newline}"
     fi
 }
-if [ -n "$LAN" ]; then
-    echo -e "${GREEN_COLOR}LAN:${RES} $LAN"
-else
-    echo -e "${GREEN_COLOR}LAN:${RES} 10.0.0.1"
-fi
-if [ -n "$ROOT_PASSWORD" ]; then
-    echo -e "${GREEN_COLOR}Default Password:${RES} ${BLUE_COLOR}$ROOT_PASSWORD${RES}"
-else
-    echo -e "${GREEN_COLOR}Default Password:${RES} (${YELLOW_COLOR}No password${RES})"
-fi
+[ -n "$LAN" ] && echo -e "${GREEN_COLOR}LAN:${RES} $LAN" || echo -e "${GREEN_COLOR}LAN:${RES} 10.0.0.1"
+[ -n "$ROOT_PASSWORD" ] \
+    && echo -e "${GREEN_COLOR}Default Password:${RES} ${BLUE_COLOR}$ROOT_PASSWORD${RES}" \
+    || echo -e "${GREEN_COLOR}Default Password:${RES} (${YELLOW_COLOR}No password${RES})"
 if [ "$ENABLE_GLIBC" = "y" ]; then
     echo -e "${GREEN_COLOR}Standard C Library:${RES} ${BLUE_COLOR}glibc${RES}"
 else
@@ -199,7 +193,7 @@ echo -e "\n${GREEN_COLOR}Patching ...${RES}\n"
 
 # scripts
 scripts=(
-  00-prepare_base.sh
+#  00-prepare_base.sh
   01-prepare_package.sh
   02-prepare_adguard_core.sh
   03-preset_mihimo_core.sh
