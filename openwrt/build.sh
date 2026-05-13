@@ -199,10 +199,10 @@ echo -e "\n${GREEN_COLOR}Patching ...${RES}\n"
 
 # scripts
 scripts=(
-#  00-prepare_base.sh
+  00-prepare_base.sh
   01-prepare_package.sh
   02-prepare_adguard_core.sh
-# 03-preset_mihimo_core.sh
+  03-preset_mihimo_core.sh
   04-preset_homeproxy.sh
   06-fix-source.sh
   10-custom.sh
@@ -221,7 +221,7 @@ chmod 0755 *sh
 bash 00-prepare_base.sh
 bash 01-prepare_package.sh
 bash 02-prepare_adguard_core.sh
-# bash 03-preset_mihimo_core.sh
+bash 03-preset_mihimo_core.sh
 bash 04-preset_homeproxy.sh
 bash 06-fix-source.sh
 if [ "$platform" = "rockchip" ]; then
@@ -249,7 +249,7 @@ fi
 curl -s $mirror/openwrt/24-config-common >> .config
 
 # ota
-[ "$ENABLE_OTA" = "y" ] && [ "$version" = "v24" ] && echo 'CONFIG_PACKAGE_luci-app-ota=y' >> .config
+# [ "$ENABLE_OTA" = "y" ] && [ "$version" = "v24" ] && echo 'CONFIG_PACKAGE_luci-app-ota=y' >> .config
 
 # docker
 [ "$ENABLE_DOCKER" = "y" ] && curl -s $mirror/openwrt/generic/config-docker >> .config
@@ -276,22 +276,6 @@ if [ "$ENABLE_LOCAL_KMOD" = "y" ]; then
     echo "CONFIG_VERSION_NUMBER="24.10.2" " >> .config
 fi
 
-# disable mihomo to avoid recursive dependency
-echo -e "\n${YELLOW_COLOR}Disable mihomo packages to avoid recursive dependency...${RES}"
-sed -i '/CONFIG_PACKAGE_.*mihomo/d' .config || true
-sed -i '/CONFIG_PACKAGE_luci-app-mihomo/d' .config || true
-sed -i '/CONFIG_PACKAGE_luci-i18n-mihomo/d' .config || true
-cat >> .config <<'EOF'
-# disable mihomo
-# CONFIG_PACKAGE_mihomo is not set
-# CONFIG_PACKAGE_mihomo-alpha is not set
-# CONFIG_PACKAGE_mihomo-beta is not set
-# CONFIG_PACKAGE_mihomo-dev is not set
-# CONFIG_PACKAGE_mihomo-meta is not set
-# CONFIG_PACKAGE_luci-app-mihomo is not set
-# CONFIG_PACKAGE_luci-i18n-mihomo-zh-cn is not set
-EOF
-
 # gcc15 patches
 [ "$(whoami)" = "runner" ] && group "patching toolchain"
 curl -s $mirror/openwrt/patch/gcc/200-toolchain-gcc-add-support-for-GCC-15.patch | patch -p1
@@ -307,7 +291,7 @@ echo -e "CONFIG_GCC_USE_VERSION_${gcc_version}=y\n" >> .config
 if [ "$BUILD_FAST" = "y" ]; then
     echo -e "\n${GREEN_COLOR}Download Toolchain ...${RES}"
     [ -f /etc/os-release ] && source /etc/os-release
-    TOOLCHAIN_URL=https://"$github_proxy"github.com/xianren78/openwrt_caches/releases/download/openwrt-24.10
+    TOOLCHAIN_URL=https://"$github_proxy"github.com/grandway2025/openwrt_caches/releases/download/openwrt-24.10
     curl -L ${TOOLCHAIN_URL}/toolchain_musl_${toolchain_arch}_gcc-${gcc_version}.tar.zst -o toolchain.tar.zst $CURL_BAR
     echo -e "\n${GREEN_COLOR}Process Toolchain ...${RES}"
     tar -I "zstd" -xf toolchain.tar.zst
