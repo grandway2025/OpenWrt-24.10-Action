@@ -254,6 +254,9 @@ curl -s $mirror/openwrt/24-config-common >> .config
 export ENABLE_LTO=$ENABLE_LTO
 [ "$ENABLE_LTO" = "y" ] && curl -s $mirror/openwrt/generic/config-lto >> .config
 
+# ccache
+[ "$ENABLE_CCACHE" = "y" ] && echo 'CONFIG_CCACHE=y' >> .config
+
 # not all kmod
 [ "$NO_KMOD" = "y" ] && sed -i '/CONFIG_ALL_KMODS=y/d' .config
 
@@ -306,8 +309,10 @@ fi
 if [ "$BUILD_TOOLCHAIN" = "y" ]; then
     echo -e "\r\n${GREEN_COLOR}Building Toolchain ...${RES}\r\n"
     make -j$cores toolchain/compile || make -j1 V=s toolchain/compile || exit 1
+    CCACHE_SUFFIX=""
+    [ "$ENABLE_CCACHE" = "y" ] && CCACHE_SUFFIX="_ccache"
     mkdir -p toolchain-cache
-    tar -I "zstd -19 -T$(nproc --all)" -cf toolchain-cache/toolchain_musl_${toolchain_arch}_gcc-${gcc_version}.tar.zst ./{build_dir,dl,staging_dir,tmp}
+    tar -I "zstd -19 -T$(nproc --all)" -cf toolchain-cache/toolchain_musl_${toolchain_arch}_gcc-${gcc_version}${CCACHE_SUFFIX}.tar.zst ./{build_dir,dl,staging_dir,tmp}
     echo -e "\n${GREEN_COLOR} Build success! ${RES}"
     exit 0
 else
