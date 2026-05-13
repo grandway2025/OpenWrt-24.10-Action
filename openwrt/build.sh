@@ -199,7 +199,7 @@ echo -e "\n${GREEN_COLOR}Patching ...${RES}\n"
 
 # scripts
 scripts=(
-  00-prepare_base.sh
+#  00-prepare_base.sh
   01-prepare_package.sh
   02-prepare_adguard_core.sh
 # 03-preset_mihimo_core.sh
@@ -328,7 +328,8 @@ fi
 # Compile
 if [ "$BUILD_TOOLCHAIN" = "y" ]; then
     echo -e "\r\n${GREEN_COLOR}Building Toolchain ...${RES}\r\n"
-    make -j$cores toolchain/compile || make -j1 V=s toolchain/compile || exit 1
+    make -j1 V=s toolchain/compile
+#   make -j$cores toolchain/compile || make -j1 V=s toolchain/compile || exit 1
     mkdir -p toolchain-cache
     tar -I "zstd -19 -T$(nproc --all)" -cf toolchain-cache/toolchain_musl_${toolchain_arch}_gcc-${gcc_version}.tar.zst ./{build_dir,dl,staging_dir,tmp}
     echo -e "\n${GREEN_COLOR} Build success! ${RES}"
