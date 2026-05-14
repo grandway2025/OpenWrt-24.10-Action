@@ -37,18 +37,18 @@ on:
 #        options:
 #          - 'nginx'
 #          - 'uhttpd'
-      mihomo_core:
-        description: '选择 Mihomo 内核（meta 为推荐版本，smart 为 Smart 智能策略组，用于提升网络稳定性）'
-        required: true
-        default: 'meta'
-        type: choice
-        options:
-          - 'meta'
-          - 'smart'          
-      docker:
-        description: '启用 Docker 支持'
-        type: boolean
-        default: true
+#      mihomo_core:
+#        description: '选择 Mihomo 内核（meta 为推荐版本，smart 为 Smart 智能策略组，用于提升网络稳定性）'
+#        required: true
+#        default: 'meta'
+#        type: choice
+#        options:
+#          - 'meta'
+#          - 'smart'          
+#      docker:
+#        description: '启用 Docker 支持'
+#        type: boolean
+#        default: true
       lan_addr:
         description: '设置默认 LAN 地址'
         required: true
