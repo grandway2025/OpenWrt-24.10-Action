@@ -144,7 +144,7 @@ else
     echo -e "${GREEN_COLOR}Standard C Library:${RES} ${BLUE_COLOR}musl${RES}"
 fi
 echo -e "${GREEN_COLOR}Standard C Library:${RES} ${BLUE_COLOR}musl${RES}"
-echo -e "${GREEN_COLOR}Web Server:${RES} ${BLUE_COLOR}$web_server${RES}"
+# echo -e "${GREEN_COLOR}Web Server:${RES} ${BLUE_COLOR}$web_server${RES}"
 print_status "ENABLE_BPF"        "$ENABLE_BPF" "$GREEN_COLOR" "$RED_COLOR"
 print_status "ENABLE_LTO"        "$ENABLE_LTO" "$GREEN_COLOR" "$RED_COLOR"
 print_status "ENABLE_LOCAL_KMOD" "$ENABLE_LOCAL_KMOD"
@@ -261,7 +261,7 @@ export ENABLE_LTO=$ENABLE_LTO
 [ "$NO_KMOD" = "y" ] && sed -i '/CONFIG_ALL_KMODS=y/d' .config
 
 # uhttpd
-[ "$web_server" = "uhttpd" ] && sed -i '/nginx/d' .config && echo 'CONFIG_PACKAGE_ariang=y' >> .config
+# [ "$web_server" = "uhttpd" ] && sed -i '/nginx/d' .config && echo 'CONFIG_PACKAGE_ariang=y' >> .config
 
 # version
 curl -s $mirror/openwrt/generic/config-version >> .config
