@@ -195,7 +195,7 @@ scripts=(
   00-prepare_base.sh
   01-prepare_package.sh
   02-prepare_adguard_core.sh
-  03-preset_mihimo_core.sh
+#  03-preset_mihimo_core.sh
   04-preset_homeproxy.sh
   06-fix-source.sh
   10-custom.sh
@@ -245,7 +245,7 @@ curl -s $mirror/openwrt/24-config-common >> .config
 # [ "$ENABLE_OTA" = "y" ] && [ "$version" = "v24" ] && echo 'CONFIG_PACKAGE_luci-app-ota=y' >> .config
 
 # docker
-[ "$ENABLE_DOCKER" = "y" ] && curl -s $mirror/openwrt/generic/config-docker >> .config
+# [ "$ENABLE_DOCKER" = "y" ] && curl -s $mirror/openwrt/generic/config-docker >> .config
 
 # bpf
 [ "$ENABLE_BPF" = "y" ] && curl -s $mirror/openwrt/generic/config-bpf >> .config
