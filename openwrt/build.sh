@@ -248,17 +248,17 @@ curl -s $mirror/openwrt/24-config-common >> .config
 # [ "$ENABLE_DOCKER" = "y" ] && curl -s $mirror/openwrt/generic/config-docker >> .config
 
 # bpf
-[ "$ENABLE_BPF" = "y" ] && curl -s $mirror/openwrt/generic/config-bpf >> .config
+# [ "$ENABLE_BPF" = "y" ] && curl -s $mirror/openwrt/generic/config-bpf >> .config
 
 # LTO
-export ENABLE_LTO=$ENABLE_LTO
-[ "$ENABLE_LTO" = "y" ] && curl -s $mirror/openwrt/generic/config-lto >> .config
+# export ENABLE_LTO=$ENABLE_LTO
+# [ "$ENABLE_LTO" = "y" ] && curl -s $mirror/openwrt/generic/config-lto >> .config
 
 # ccache
 [ "$ENABLE_CCACHE" = "y" ] && echo 'CONFIG_CCACHE=y' >> .config
 
 # not all kmod
-[ "$NO_KMOD" = "y" ] && sed -i '/CONFIG_ALL_KMODS=y/d' .config
+# [ "$NO_KMOD" = "y" ] && sed -i '/CONFIG_ALL_KMODS=y/d' .config
 
 # uhttpd
 # [ "$web_server" = "uhttpd" ] && sed -i '/nginx/d' .config && echo 'CONFIG_PACKAGE_ariang=y' >> .config
@@ -267,10 +267,10 @@ export ENABLE_LTO=$ENABLE_LTO
 curl -s $mirror/openwrt/generic/config-version >> .config
 
 # local kmod
-if [ "$ENABLE_LOCAL_KMOD" = "y" ]; then
-    echo -e "\n# local kmod" >> .config
-    echo "CONFIG_VERSION_NUMBER="24.10.2" " >> .config
-fi
+#if [ "$ENABLE_LOCAL_KMOD" = "y" ]; then
+#    echo -e "\n# local kmod" >> .config
+#    echo "CONFIG_VERSION_NUMBER="24.10.2" " >> .config
+#fi
 
 # gcc15 patches
 [ "$(whoami)" = "runner" ] && group "patching toolchain"
